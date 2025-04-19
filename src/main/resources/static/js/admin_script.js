@@ -87,6 +87,105 @@ async function loadUsers() {
     }
 }
 
+// Загрузка метрик
+async function loadMetrics() {
+    try {
+        // Загрузка количества заказов
+        const ordersResponse = await fetch('http://localhost:8080/api/admin/orders/metrics/orders-by-user', {
+            credentials: 'include',
+        });
+        if (ordersResponse.ok) {
+            const ordersData = await ordersResponse.json();
+            renderOrdersCountChart(ordersData);
+        } else {
+            console.error('Failed to load orders metrics, status:', ordersResponse.status);
+        }
+
+        // Загрузка общей суммы заказов
+        const priceResponse = await fetch('http://localhost:8080/api/admin/orders/metrics/total-price-by-user', {
+            credentials: 'include',
+        });
+        if (priceResponse.ok) {
+            const priceData = await priceResponse.json();
+            renderTotalPriceChart(priceData);
+        } else {
+            console.error('Failed to load total price metrics, status:', priceResponse.status);
+        }
+    } catch (error) {
+        console.error('Error loading metrics:', error);
+    }
+}
+
+// Отрисовка графика количества заказов
+function renderOrdersCountChart(data) {
+    const ctx = document.getElementById('ordersCountChart').getContext('2d');
+    new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: data.map(item => item.username),
+            datasets: [{
+                label: 'Количество заказов',
+                data: data.map(item => item.orderCount),
+                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                borderColor: 'rgba(75, 192, 192, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    title: {
+                        display: true,
+                        text: 'Количество заказов'
+                    }
+                },
+                x: {
+                    title: {
+                        display: true,
+                        text: 'Пользователь'
+                    }
+                }
+            }
+        }
+    });
+}
+
+// Отрисовка графика общей суммы заказов
+function renderTotalPriceChart(data) {
+    const ctx = document.getElementById('totalPriceChart').getContext('2d');
+    new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: data.map(item => item.username),
+            datasets: [{
+                label: 'Общая сумма заказов (руб.)',
+                data: data.map(item => item.totalPrice),
+                backgroundColor: 'rgba(153, 102, 255, 0.2)',
+                borderColor: 'rgba(153, 102, 255, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    title: {
+                        display: true,
+                        text: 'Сумма (руб.)'
+                    }
+                },
+                x: {
+                    title: {
+                        display: true,
+                        text: 'Пользователь'
+                    }
+                }
+            }
+        }
+    });
+}
+
 // Показать форму добавления/редактирования товара
 function showAddProductForm(isEditing = false) {
     const formContainer = document.getElementById('add-product-form');
@@ -282,4 +381,5 @@ window.onload = () => {
     checkAdminAccess();
     loadProducts();
     loadUsers();
+    loadMetrics();
 };
