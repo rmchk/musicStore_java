@@ -18,9 +18,9 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/", "/index.html", "/cart.html", "/login.html", "/register.html", "/css/**", "/js/**", "/images/**", "/api/public/**", "/api/users/register").permitAll()
-                        .requestMatchers("/profile.html", "/api/users/me", "/api/users/change-password","/api/cart/**").authenticated()
-                        .requestMatchers("/admin/**").hasRole("ADMIN")
+                        .requestMatchers("/", "/index.html", "/cart.html", "/login.html", "/register.html", "/verify-registration.html", "/css/**", "/js/**", "/images/**", "/api/public/**", "/api/users/register", "/api/users/verify-registration").permitAll()
+                        .requestMatchers("/profile.html", "/api/users/me", "/api/users/change-password", "/api/cart/**").authenticated()
+                        .requestMatchers("/admin/**", "/admin.html").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )
                 .formLogin(form -> form
@@ -33,13 +33,18 @@ public class SecurityConfig {
                 .logout(logout -> logout
                         .permitAll()
                         .logoutSuccessUrl("/login.html?logout=true")
-                        .invalidateHttpSession(true) // Убедимся, что сессия завершается при логауте
-                        .deleteCookies("JSESSIONID") // Удаляем cookie при логауте
+                        .invalidateHttpSession(true)
+                        .deleteCookies("JSESSIONID")
                 )
                 .sessionManagement(session -> session
-                        .sessionCreationPolicy(SessionCreationPolicy.ALWAYS) // Создаем сессию, если требуется
+                        .sessionCreationPolicy(SessionCreationPolicy.ALWAYS)
                         .maximumSessions(1)
                         .expiredUrl("/login.html?expired=true")
+                )
+                .exceptionHandling(exception -> exception
+                        .accessDeniedHandler((request, response, accessDeniedException) -> {
+                            response.sendRedirect("/index.html");
+                        })
                 )
                 .csrf(csrf -> csrf.disable());
 

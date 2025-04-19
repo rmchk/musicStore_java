@@ -1,7 +1,9 @@
 package com.example.musicStore.controller;
 
+import com.example.musicStore.config.Views;
 import com.example.musicStore.model.User;
 import com.example.musicStore.service.UserService;
+import com.fasterxml.jackson.annotation.JsonView;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -54,22 +56,17 @@ public class UserController {
     }
 
     @GetMapping("/me")
+    @JsonView(Views.Public.class)
     public ResponseEntity<?> getCurrentUser(Authentication authentication) {
         try {
-            System.out.println("GET /api/users/me - Authentication: " + authentication);
             if (authentication == null || !authentication.isAuthenticated()) {
-                System.out.println("GET /api/users/me - User is not authenticated");
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                         .body("Пользователь не аутентифицирован");
             }
             String username = authentication.getName();
-            System.out.println("GET /api/users/me - Authenticated user: " + username);
-            // Используем findByUsername вместо loadUserByUsername
             User user = userService.findByUsername(username);
-            System.out.println("GET /api/users/me - Returning user: " + user);
             return ResponseEntity.ok(user);
         } catch (Exception e) {
-            System.out.println("GET /api/users/me - Error: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Ошибка при получении данных пользователя: " + e.getMessage());
         }
@@ -116,7 +113,6 @@ public class UserController {
             }
             String username = authentication.getName();
             User user = userService.findByUsername(username);
-            System.out.println("Before updating email for user: " + username + ", current password: " + user.getPassword());
 
             // Валидация нового email
             if (request.getNewEmail() == null || !request.getNewEmail().matches("^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$")) {
@@ -133,7 +129,6 @@ public class UserController {
             // Обновляем email
             user.setEmail(request.getNewEmail());
             User savedUser = userService.saveUser(user);
-            System.out.println("After updating email for user: " + username + ", final password: " + savedUser.getPassword());
             return ResponseEntity.ok("Email успешно изменён");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)

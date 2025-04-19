@@ -9,11 +9,10 @@ async function checkAdminAccess() {
         if (response.ok) {
             const user = await response.json();
             if (user.role !== 'ADMIN') {
-                alert('Доступ запрещён. Только для администраторов.');
-                window.location.href = '/index.html';
+                window.location.href = '/index.html'; // Перенаправляем на главную
             }
         } else {
-            window.location.href = '/login.html';
+            window.location.href = '/login.html'; // Перенаправляем на логин
         }
     } catch (error) {
         console.error('Error checking admin access:', error);
