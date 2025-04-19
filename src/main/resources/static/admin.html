@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Админ-панель</title>
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+<header>
+    <div class="top-bar">
+        <div class="location">Москва ▼</div>
+        <div class="contact">Сервисный центр. Москва и область +7 (800) 333-09-89</div>
+    </div>
+    <nav>
+        <div class="logo">Music Store</div>
+        <ul>
+            <li><a href="/index.html">Каталог</a></li>
+            <li><a href="/profile.html">Личный кабинет</a></li>
+            <li><a href="/logout">Выйти</a></li>
+        </ul>
+    </nav>
+</header>
+
+<section class="admin-panel">
+    <div class="admin-container">
+        <h2>Админ-панель</h2>
+
+        <!-- Управление товарами -->
+        <div class="admin-section">
+            <h3>Управление товарами</h3>
+            <button onclick="showAddProductForm()">Добавить товар</button>
+            <div id="add-product-form" style="display: none;">
+                <h4 id="product-form-title">Добавить новый товар</h4>
+                <form id="product-form">
+                    <label>Название*</label>
+                    <input type="text" name="name" placeholder="Введите название товара" required>
+                    <label>Бренд</label>
+                    <input type="text" name="brand" placeholder="Введите бренд">
+                    <label>Цена (руб.)*</label>
+                    <input type="number" name="price" placeholder="Введите цену" required>
+                    <label>Категория</label>
+                    <input type="text" name="category" placeholder="Введите категорию">
+                    <label>Описание</label>
+                    <textarea name="description" placeholder="Введите описание"></textarea>
+                    <label>Изображение (URL)</label>
+                    <input type="text" name="image" placeholder="Введите URL изображения">
+                    <button type="submit">Сохранить</button>
+                    <button type="button" onclick="hideAddProductForm()">Отмена</button>
+                </form>
+            </div>
+            <table id="products-table">
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Название</th>
+                    <th>Цена (руб.)</th>
+                    <th>Изображение</th>
+                    <th>Действия</th>
+                </tr>
+                </thead>
+                <tbody id="products-list"></tbody>
+            </table>
+        </div>
+
+        <!-- Управление пользователями -->
+        <div class="admin-section">
+            <h3>Управление пользователями</h3>
+            <table id="users-table">
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Логин</th>
+                    <th>Email</th>
+                    <th>Роль</th>
+                    <th>Действия</th>
+                </tr>
+                </thead>
+                <tbody id="users-list"></tbody>
+            </table>
+        </div>
+    </div>
+</section>
+
+<footer>
+    <div class="footer-content">
+        <div class="footer-section">
+            <h3>Каталог</h3>
+            <ul>
+                <li><a href="#">Наушники и персонал аудио</a></li>
+                <li><a href="#">Акустика и hi-fi аудио</a></li>
+                <li><a href="#">Микрофоны и про аудио</a></li>
+            </ul>
+        </div>
+        <div class="footer-section">
+            <h3>О компании</h3>
+            <ul>
+                <li><a href="#">Корпоративные подарки</a></li>
+                <li><a href="#">Положение сервиса</a></li>
+            </ul>
+        </div>
+        <div class="footer-section">
+            <h3>Контакты</h3>
+            <p>+7 (800) 333-09-89</p>
+            <p><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="d5bcbbb3ba95b8a0a6bcb6a6a1baa7b0fba7a0">[email protected]</a></p>
+        </div>
+    </div>
+</footer>
+
+<script src="/js/script.js"></script>
+<script src="/js/admin_script.js"></script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9323c5ebaa276779',t:'MTc0NDk3NTIyOC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script>
+</body>
+</html>

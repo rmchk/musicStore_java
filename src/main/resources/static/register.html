@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Регистрация</title>
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+<header>
+    <div class="top-bar">
+        <div class="location">Москва ▼</div>
+        <div class="contact">Сервисный центр. Москва и область +7 (800) 333-09-89</div>
+    </div>
+    <nav>
+        <div class="logo">Music Store</div>
+        <ul>
+            <li><a href="/index.html">Назад в каталог</a></li>
+            <li><a href="/login.html">Войти</a></li>
+        </ul>
+    </nav>
+</header>
+
+<section class="register">
+    <div class="register-form">
+        <h2>Регистрация</h2>
+        <form id="register-form">
+            <label>Имя пользователя*</label>
+            <input type="text" name="username" placeholder="Введите имя пользователя" required>
+            <label>Ваш e-mail*</label>
+            <input type="email" name="email" placeholder="Введите e-mail" required>
+            <label>Пароль*</label>
+            <input type="password" name="password" placeholder="Введите пароль" required>
+            <button type="submit">Зарегистрироваться</button>
+        </form>
+        <p id="error-message" style="color: red; display: none;"></p>
+        <p id="success-message" style="color: green; display: none;"></p>
+        <p>Уже есть учетная запись? <a href="/login.html">Войдите</a></p>
+    </div>
+</section>
+
+<footer>
+    <div class="footer-content">
+        <div class="footer-section">
+            <h3>Каталог</h3>
+            <ul>
+                <li><a href="#">Наушники и персонал аудио</a></li>
+                <li><a href="#">Акустика и hi-fi аудио</a></li>
+                <li><a href="#">Микрофоны и про аудио</a></li>
+            </ul>
+        </div>
+        <div class="footer-section">
+            <h3>О компании</h3>
+            <ul>
+                <li><a href="#">Корпоративные подарки</a></li>
+                <li><a href="#">Положение сервиса</a></li>
+            </ul>
+        </div>
+        <div class="footer-section">
+            <h3>Контакты</h3>
+            <p>+7 (800) 333-09-89</p>
+            <p>info@musicstore.ru</p>
+        </div>
+    </div>
+</footer>
+
+<script>
+    document.getElementById('register-form').addEventListener('submit', async (event) => {
+        event.preventDefault();
+
+        const formData = new FormData(event.target);
+        const userData = {
+            username: formData.get('username'),
+            email: formData.get('email'),
+            password: formData.get('password')
+        };
+
+        try {
+            const response = await fetch('http://localhost:8080/api/users/register', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(userData),
+            });
+
+            const result = await response.text();
+
+            if (response.ok) {
+                document.getElementById('success-message').textContent = result;
+                document.getElementById('success-message').style.display = 'block';
+                document.getElementById('error-message').style.display = 'none';
+                // Перенаправляем на страницу логина через 2 секунды
+                setTimeout(() => {
+                    window.location.href = '/login.html';
+                }, 2000);
+            } else {
+                document.getElementById('error-message').textContent = result;
+                document.getElementById('error-message').style.display = 'block';
+                document.getElementById('success-message').style.display = 'none';
+            }
+        } catch (error) {
+            document.getElementById('error-message').textContent = 'Произошла ошибка. Пожалуйста, попробуйте снова.';
+            document.getElementById('error-message').style.display = 'block';
+            document.getElementById('success-message').style.display = 'none';
+        }
+    });
+</script>
+</body>
+</html>

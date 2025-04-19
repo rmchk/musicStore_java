@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Авторизация</title>
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+<header>
+    <div class="top-bar">
+        <div class="location">Москва ▼</div>
+        <div class="contact">Сервисный центр. Москва и область +7 (800) 333-09-89</div>
+    </div>
+    <nav>
+        <div class="logo">Music Store</div>
+        <ul>
+            <li><a href="/index.html">Назад в каталог</a></li>
+            <li><a href="/register.html">Регистрация</a></li>
+        </ul>
+    </nav>
+</header>
+
+<section class="login">
+    <div class="login-form">
+        <h2>Авторизация</h2>
+        <form action="/login" method="POST">
+            <label>Ваш e-mail*</label>
+            <input type="text" name="username" placeholder="Введите логин" required>
+            <label>Пароль*</label>
+            <input type="password" name="password" placeholder="Введите пароль" required>
+            <button type="submit">Войти</button>
+            <a href="#">Забыли пароль?</a>
+        </form>
+        <p id="error-message" style="color: red; display: none;">Неверный логин или пароль</p>
+        <p>Авторизуйтесь с помощью</p>
+        <div class="social-login">
+            <button>VK</button>
+            <button>Яндекс</button>
+        </div>
+        <p>Нет учетной записи? <a href="/register.html">Зарегистрируйтесь</a></p>
+    </div>
+</section>
+
+<footer>
+    <div class="footer-content">
+        <div class="footer-section">
+            <h3>Каталог</h3>
+            <ul>
+                <li><a href="#">Наушники и персонал аудио</a></li>
+                <li><a href="#">Акустика и hi-fi аудио</a></li>
+                <li><a href="#">Микрофоны и про аудио</a></li>
+            </ul>
+        </div>
+        <div class="footer-section">
+            <h3>О компании</h3>
+            <ul>
+                <li><a href="#">Корпоративные подарки</a></li>
+                <li><a href="#">Положение сервиса</a></li>
+            </ul>
+        </div>
+        <div class="footer-section">
+            <h3>Контакты</h3>
+            <p>+7 (800) 333-09-89</p>
+            <p>info@musicstore.ru</p>
+        </div>
+    </div>
+</footer>
+
+<script>
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.has('error')) {
+        document.getElementById('error-message').style.display = 'block';
+    }
+
+    // Проверяем, если пользователь только что вошел
+    if (urlParams.has('success')) {
+        // Вызываем checkAuthStatus после успешного логина
+        if (window.opener && window.opener.checkAuthStatus) {
+            window.opener.checkAuthStatus();
+        }
+    }
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.has('success')) {
+        checkAuthStatus();
+    }
+</script>
+</body>
+</html>

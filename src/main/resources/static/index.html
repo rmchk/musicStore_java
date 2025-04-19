@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Музыкальный магазин</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+<!-- header -->
+<header>
+    <div class="top-bar">
+        <div class="location">Москва ▼</div>
+        <div class="contact">Сервисный центр. Москва и область +7 (800) 333-09-89</div>
+        <div class="user-actions">
+            <a href="profile.html"><img src="images/user-icon.png" alt="User"></a>
+            <a href="author.html"><img src="images/heart-icon.png" alt="Favorites"></a>
+            <a href="cart.html"><img src="images/cart-icon.png" alt="Cart"><span id="cart-count">0</span></a>
+        </div>
+    </div>
+    <nav>
+        <div class="logo">Music Store</div>
+        <ul>
+            <li><a href="#">Наушники и персонал аудио</a></li>
+            <li><a href="#">Акустика и hi-fi аудио</a></li>
+            <li><a href="#">Микрофоны и про аудио</a></li>
+            <li><a href="#">Гарнитуры и гейм аудио</a></li>
+            <li><a href="#">Винил и музыка</a></li>
+            <li><a href="#">Custom shop</a></li>
+            <li><a href="#">Акции</a></li>
+            <li><a href="#">Бренды</a></li>
+        </ul>
+    </nav>
+</header>
+
+<!-- Баннер -->
+<section class="banner">
+    <div class="banner-content">
+        <h2>Soundcore Liberty 4 Pro</h2>
+        <p>ПРЕДЗАКАЗ ОТКРЫТ</p>
+        <button>Подробнее</button>
+    </div>
+</section>
+
+<!-- Поиск и фильтрация -->
+<section class="search-filter">
+    <h1>Каталог</h1>
+    <div class="search-bar">
+        <input type="text" id="search-input" placeholder="Поиск по каталогу">
+        <select id="category-filter">
+            <option value="">Все категории</option>
+            <!-- Категории будут добавлены через JavaScript -->
+        </select>
+        <select id="sort-filter">
+            <option value="">Без сортировки</option>
+            <option value="price-asc">Цена: по возрастанию</option>
+            <option value="price-desc">Цена: по убыванию</option>
+            <option value="name-asc">Название: A-Z</option>
+            <option value="name-desc">Название: Z-A</option>
+        </select>
+        <select id="brand-filter">
+            <option value="">Все бренды</option>
+            <!-- Бренды будут добавлены через JavaScript -->
+        </select>
+<!--        <button onclick="filterAndSortProducts()">Применить</button>-->
+    </div>
+</section>
+
+<!-- Каталог товаров -->
+<section class="catalog">
+    <div class="product-grid" id="product-grid">
+        <!-- Товары будут добавлены через JavaScript -->
+    </div>
+</section>
+
+<!-- footer -->
+<footer>
+    <div class="footer-content">
+        <div class="footer-section">
+            <h3>Каталог</h3>
+            <ul>
+                <li><a href="#">Наушники и персонал аудио</a></li>
+                <li><a href="#">Акустика и hi-fi аудио</a></li>
+                <li><a href="#">Микрофоны и про аудио</a></li>
+            </ul>
+        </div>
+        <div class="footer-section">
+            <h3>О компании</h3>
+            <ul>
+                <li><a href="#">Корпоративные подарки</a></li>
+                <li><a href="#">Положение сервиса</a></li>
+            </ul>
+        </div>
+        <div class="footer-section">
+            <h3>Контакты</h3>
+            <p>+7 (800) 333-09-89</p>
+            <p><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="70191e161f301d0503191303041f02155e0205">[email&#160;protected]</a></p>
+        </div>
+    </div>
+</footer>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script>
+<script src="js/script.js"></script>
+<script>
+    window.onload = () => {
+        console.log('Index.html loaded, calling loadProducts, checkAuthStatus, and updateCartCount...');
+        checkAuthStatus();
+    };
+</script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'92ba97d5c96f0eaa',t:'MTc0Mzg3MjMzNi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'93244bb43bc5b0d6',t:'MTc0NDk4MDcwOC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script>
+</body>
+</html>

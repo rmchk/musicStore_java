@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Корзина</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+<header>
+    <div class="top-bar">
+        <div class="location">Москва ▼</div>
+        <div class="contact">Сервисный центр. Москва и область +7 (800) 333-09-89</div>
+        <div class="user-actions">
+            <a href="profile.html"><img src="images/user-icon.png" alt="User"></a>
+            <a href="#"><img src="images/heart-icon.png" alt="Favorites"></a>
+            <a href="cart.html"><img src="images/cart-icon.png" alt="Cart"><span id="cart-count">0</span></a>
+        </div>
+    </div>
+    <nav>
+        <div class="logo">Music Store</div>
+        <ul>
+            <li><a href="index.html">Назад в каталог</a></li>
+            <li><span id="user-status">Гость</span></li>
+        </ul>
+    </nav>
+</header>
+
+<section class="cart">
+    <h1>Корзина <span id="cart-items-count">0</span></h1>
+    <div id="cart-items">
+        <!-- Товары в корзине будут добавлены через JavaScript -->
+    </div>
+    <div class="cart-total">
+        <p>Итого: <span id="cart-total">0 руб.</span></p>
+        <button id="checkout-button">Оформить заказ</button>
+    </div>
+</section>
+
+<footer>
+    <!-- Аналогично index.html -->
+</footer>
+
+<script src="js/script.js"></script>
+<script>
+    window.onload = () => {
+        checkAuthStatus(); // Добавляем вызов checkAuthStatus
+
+    };
+
+    // Добавляем обработчик события для кнопки
+    document.getElementById('checkout-button').addEventListener('click', async () => {
+        await checkout();
+    });
+</script>
+</body>
+</html>

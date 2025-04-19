@@ -1,0 +1,17 @@
+-- -- Очистка таблиц перед вставкой
+--TRUNCATE TABLE users RESTART IDENTITY CASCADE;
+--ALTER SEQUENCE product_seq RESTART WITH 6;
+--
+-- -- Вставка тестовых пользователей (без указания id)
+--INSERT INTO users (username, password, email, role) VALUES
+--                                                        ('admin', '$2a$10$qO/PwDgg1EPXRJHZF1If7uRxfNG.7KvwTHzpxri8kLV5KpwKKViSO', 'admin@musicstore.ru', 'ADMIN'),
+--                                                        ('user', '$2a$10$qO/PwDgg1EPXRJHZF1If7uRxfNG.7KvwTHzpxri8kLV5KpwKKViSO', 'user@musicstore.ru', 'USER');
+-- ON CONFLICT DO NOTHING;
+--
+-- INSERT INTO products (id, name, category, price, in_stock, description) VALUES
+--                                                                             (1, 'Наушники Sony', 'Наушники', 1031, true, 'Качественные наушники Sony'),
+--                                                                             (2, 'Гарнитура Logitech', 'Гарнитуры', 51, true, 'Игровая гарнитура Logitech'),
+--                                                                             (3, 'Плеер Fiio', 'Плееры', 48, true, 'Портативный плеер Fiio'),
+--                                                                             (4, 'Колонка JBL', 'Колонки', 203, true, 'Беспроводная колонка JBL'),
+--                                                                             (5, 'Усилитель SMSL', 'Усилители', 195, true, 'Усилитель для наушников SMSL')
+-- ON CONFLICT DO NOTHING;

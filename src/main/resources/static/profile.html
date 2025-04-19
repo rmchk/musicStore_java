@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Личный кабинет</title>
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+<header>
+  <div class="top-bar">
+    <div class="location">Москва ▼</div>
+    <div class="contact">Сервисный центр. Москва и область +7 (800) 333-09-89</div>
+  </div>
+  <nav>
+    <div class="logo">Music Store</div>
+    <ul>
+      <li><a href="/index.html">Каталог</a></li>
+      <li><a href="/cart.html">Корзина</a></li>
+      <li><a href="/logout">Выйти</a></li>
+      <!-- Добавляем скрытые элементы для совместимости с checkAuthStatus -->
+      <li style="display: none;">
+        <span id="user-status"></span>
+        <a href="/profile.html" id="profile-link"></a>
+        <a href="/login.html" id="login-link"></a>
+        <a href="/logout" id="logout-link"></a>
+      </li>
+    </ul>
+  </nav>
+</header>
+
+<section class="profile">
+  <div class="profile-container">
+    <h2>Личный кабинет</h2>
+
+    <!-- Персональные данные -->
+    <div class="profile-section">
+      <h3>Персональные данные</h3>
+      <p><strong>Логин:</strong> <span id="username"></span></p>
+      <p><strong>Email:</strong> <span id="email"></span></p>
+      <form id="change-email-form">
+        <label>Новый email*</label>
+        <input type="email" name="newEmail" placeholder="Введите новый email" required>
+        <button type="submit">Сменить email</button>
+      </form>
+      <p id="email-error" style="color: red; display: none;"></p>
+      <p id="email-success" style="color: green; display: none;"></p>
+    </div>
+
+    <!-- Смена пароля -->
+    <div class="profile-section">
+      <h3>Смена пароля</h3>
+      <form id="change-password-form">
+        <label>Старый пароль*</label>
+        <input type="password" name="oldPassword" placeholder="Введите старый пароль" required>
+        <label>Новый пароль*</label>
+        <input type="password" name="newPassword" placeholder="Введите новый пароль" required>
+        <button type="submit">Сменить пароль</button>
+      </form>
+      <p id="password-error" style="color: red; display: none;"></p>
+      <p id="password-success" style="color: green; display: none;"></p>
+    </div>
+
+    <!-- История заказов -->
+    <div class="profile-section">
+      <h3>История заказов</h3>
+      <div id="orders-list"></div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-content">
+    <div class="footer-section">
+      <h3>Каталог</h3>
+      <ul>
+        <li><a href="#">Наушники и персонал аудио</a></li>
+        <li><a href="#">Акустика и hi-fi аудио</a></li>
+        <li><a href="#">Микрофоны и про аудио</a></li>
+      </ul>
+    </div>
+    <div class="footer-section">
+      <h3>О компании</h3>
+      <ul>
+        <li><a href="#">Корпоративные подарки</a></li>
+        <li><a href="#">Положение сервиса</a></li>
+      </ul>
+    </div>
+    <div class="footer-section">
+      <h3>Контакты</h3>
+      <p>+7 (800) 333-09-89</p>
+      <p><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="14d3a7b4">[email&#160;protected]</a></p>
+    </div>
+  </div>
+</footer>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script>
+<script src="/js/script.js"></script>
+<script>
+  // Загрузка данных пользователя
+  async function loadUserData() {
+    try {
+      console.log('Fetching user data from /api/users/me...');
+      const response = await fetch('http://localhost:8080/api/users/me', {
+        credentials: 'include',
+      });
+      console.log('User data response status:', response.status);
+      console.log('User data response headers:', response.headers.get('Set-Cookie'));
+      if (response.ok) {
+        const user = await response.json();
+        console.log('User data:', user);
+        document.getElementById('username').textContent = user.username;
+        document.getElementById('email').textContent = user.email;
+      } else {
+        console.log('User not authenticated, status:', response.status);
+        console.log('Response text:', await response.text());
+        window.location.href = '/login.html';
+      }
+    } catch (error) {
+      console.error('Error loading user data:', error);
+      window.location.href = '/login.html';
+    }
+  }
+
+  // Загрузка истории заказов
+  async function loadOrders() {
+    try {
+      console.log('Fetching orders from /api/cart/orders...');
+      const response = await fetch('http://localhost:8080/api/cart/orders', {
+        credentials: 'include',
+      });
+      console.log('Orders response status:', response.status);
+      console.log('Orders response headers:', response.headers.get('Set-Cookie'));
+      if (response.ok) {
+        const orders = await response.json();
+        console.log('Orders:', orders);
+        const ordersList = document.getElementById('orders-list');
+        ordersList.innerHTML = '';
+
+        if (orders.length === 0) {
+          ordersList.innerHTML = '<p>У вас пока нет заказов.</p>';
+          return;
+        }
+
+        orders.forEach(order => {
+          const orderItem = document.createElement('div');
+          orderItem.classList.add('order-item');
+          orderItem.innerHTML = `
+                            <p><strong>Заказ #${order.id}</strong></p>
+                            <p>Дата: ${new Date(order.orderDate).toLocaleString()}</p>
+                            <p>Сумма: ${order.totalPrice} руб.</p>
+                            <p>Товары:</p>
+                            <ul>
+                                ${order.products.map(product => `<li>${product.name} - ${product.price} руб.</li>`).join('')}
+                            </ul>
+                        `;
+          ordersList.appendChild(orderItem);
+        });
+      } else {
+        console.log('Failed to load orders, status:', response.status);
+        console.log('Response text:', await response.text());
+        document.getElementById('orders-list').innerHTML = '<p>Ошибка при загрузке заказов.</p>';
+      }
+    } catch (error) {
+      console.error('Error loading orders:', error);
+      document.getElementById('orders-list').innerHTML = '<p>Ошибка при загрузке заказов.</p>';
+    }
+  }
+
+  // Обработка смены пароля
+  document.getElementById('change-password-form').addEventListener('submit', async (event) => {
+    event.preventDefault();
+
+    const formData = new FormData(event.target);
+    const passwordData = {
+      oldPassword: formData.get('oldPassword'),
+      newPassword: formData.get('newPassword')
+    };
+
+    try {
+      const response = await fetch('http://localhost:8080/api/users/change-password', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include',
+        body: JSON.stringify(passwordData),
+      });
+
+      const result = await response.text();
+
+      if (response.ok) {
+        document.getElementById('password-success').textContent = result;
+        document.getElementById('password-success').style.display = 'block';
+        document.getElementById('password-error').style.display = 'none';
+        event.target.reset();
+      } else {
+        document.getElementById('password-error').textContent = result;
+        document.getElementById('password-error').style.display = 'block';
+        document.getElementById('password-success').style.display = 'none';
+      }
+    } catch (error) {
+      document.getElementById('password-error').textContent = 'Произошла ошибка. Пожалуйста, попробуйте снова.';
+      document.getElementById('password-error').style.display = 'block';
+      document.getElementById('password-success').style.display = 'none';
+    }
+  });
+
+  // Обработка смены email
+  document.getElementById('change-email-form').addEventListener('submit', async (event) => {
+    event.preventDefault();
+
+    const formData = new FormData(event.target);
+    const emailData = {
+      newEmail: formData.get('newEmail')
+    };
+
+    try {
+      const response = await fetch('http://localhost:8080/api/users/change-email', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include',
+        body: JSON.stringify(emailData),
+      });
+
+      const result = await response.text();
+
+      if (response.ok) {
+        document.getElementById('email-success').textContent = result;
+        document.getElementById('email-success').style.display = 'block';
+        document.getElementById('email-error').style.display = 'none';
+        event.target.reset();
+        // Обновляем отображаемый email
+        await loadUserData();
+      } else {
+        document.getElementById('email-error').textContent = result;
+        document.getElementById('email-error').style.display = 'block';
+        document.getElementById('email-success').style.display = 'none';
+      }
+    } catch (error) {
+      document.getElementById('email-error').textContent = 'Произошла ошибка. Пожалуйста, попробуйте снова.';
+      document.getElementById('email-error').style.display = 'block';
+      document.getElementById('email-success').style.display = 'none';
+    }
+  });
+
+  // Загружаем данные при загрузке страницы
+  window.onload = () => {
+    loadUserData();
+    loadOrders();
+    checkAuthStatus();
+  };
+</script>
+</body>
+</html>
