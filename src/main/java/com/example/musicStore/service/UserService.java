@@ -31,12 +31,20 @@ public class UserService implements UserDetailsService {
     private PasswordEncoder passwordEncoder;
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        System.out.println("Loading user: " + username);
-        Optional<User> userOpt = userRepository.findByUsername(username);
+    public UserDetails loadUserByUsername(String login) throws UsernameNotFoundException {
+        System.out.println("Loading user by login: " + login);
+
+        // Проверяем, является ли login email'ом (содержит @)
+        Optional<User> userOpt;
+        if (login.contains("@")) {
+            userOpt = userRepository.findByEmail(login);
+        } else {
+            userOpt = userRepository.findByUsername(login);
+        }
+
         if (userOpt.isEmpty()) {
-            System.out.println("User not found: " + username);
-            throw new UsernameNotFoundException("User not found: " + username);
+            System.out.println("User not found: " + login);
+            throw new UsernameNotFoundException("User not found: " + login);
         }
         User user = userOpt.get();
         System.out.println("User found: " + user.getUsername() + ", role: " + user.getRole());
@@ -46,6 +54,7 @@ public class UserService implements UserDetailsService {
                 .roles(user.getRole())
                 .build();
     }
+
 
     public User findByUsername(String username) {
         return userRepository.findByUsername(username)
