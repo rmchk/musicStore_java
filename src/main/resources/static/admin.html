@@ -16,9 +16,21 @@
     <nav>
         <div class="logo">Music Store</div>
         <ul>
-            <li><a href="/index.html">Каталог</a></li>
-            <li><a href="/profile.html">Личный кабинет</a></li>
-            <li><a href="/logout">Выйти</a></li>
+            <li>
+                <a href="/index.html" class="nav-link">
+                    <span class="nav-icon">←</span> Назад в каталог
+                </a>
+            </li>
+            <li>
+                <a href="/profile.html" class="nav-link">
+                    <img src="/images/user-icon.png" alt="Profile" class="nav-icon"> Личный кабинет
+                </a>
+            </li>
+            <li>
+                <a href="/logout" class="nav-link">
+                    Выйти
+                </a>
+            </li>
         </ul>
     </nav>
 </header>
@@ -27,23 +39,15 @@
     <div class="admin-container">
         <h2>Админ-панель</h2>
 
-        <!-- Метрики -->
+        <!-- Кнопка для перехода на страницу с метриками -->
         <div class="admin-section">
-            <h3>Метрики</h3>
-            <div style="margin-bottom: 20px;">
-                <h4>Количество заказов по пользователям</h4>
-                <canvas id="ordersCountChart" width="400" height="200"></canvas>
-            </div>
-            <div>
-                <h4>Общая сумма заказов по пользователям</h4>
-                <canvas id="totalPriceChart" width="400" height="200"></canvas>
-            </div>
+            <button class="admin-button" onclick="window.location.href='/metrics.html'">Показать метрики</button>
         </div>
 
         <!-- Управление товарами -->
         <div class="admin-section">
             <h3>Управление товарами</h3>
-            <button onclick="showAddProductForm()">Добавить товар</button>
+            <button class="admin-button" onclick="showAddProductForm()">Добавить товар</button>
             <div id="add-product-form" style="display: none;">
                 <h4 id="product-form-title">Добавить новый товар</h4>
                 <form id="product-form">
@@ -98,25 +102,13 @@
 
 <footer>
     <div class="footer-content">
-        <div class="footer-section">
-            <h3>Каталог</h3>
-            <ul>
-                <li><a href="#">Наушники и персонал аудио</a></li>
-                <li><a href="#">Акустика и hi-fi аудио</a></li>
-                <li><a href="#">Микрофоны и про аудио</a></li>
-            </ul>
-        </div>
-        <div class="footer-section">
-            <h3>О компании</h3>
-            <ul>
-                <li><a href="#">Корпоративные подарки</a></li>
-                <li><a href="#">Положение сервиса</a></li>
-            </ul>
-        </div>
-        <div class="footer-section">
+        <div class="footer-contacts">
             <h3>Контакты</h3>
-            <p>+7 (800) 333-09-89</p>
-            <p><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="d5bcbbb3ba95b8a0a6bcb6a6a1baa7b0fba7a0">[email protected]</a></p>
+            <p>Телефон:  +7 (800) 333-99-99</p>
+            <p><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="7f161119103f120a0c161c0c0b100d1a510d0a">Email:  info@musicstore.ru</a></p>
+        </div>
+        <div class="footer-copyright">
+            <p>© Магазин персонального аудио «Music Store», 2020-2025</p>
         </div>
     </div>
 </footer>

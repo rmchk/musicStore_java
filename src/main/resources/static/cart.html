@@ -12,46 +12,136 @@
         <div class="location">Москва ▼</div>
         <div class="contact">Сервисный центр. Москва и область +7 (800) 333-09-89</div>
         <div class="user-actions">
-            <a href="profile.html"><img src="images/user-icon.png" alt="User"></a>
-            <a href="#"><img src="images/heart-icon.png" alt="Favorites"></a>
-            <a href="cart.html"><img src="images/cart-icon.png" alt="Cart"><span id="cart-count">0</span></a>
+            <a href="profile.html"></a>
+            <a href="#"></a>
+            <a href="cart.html"><img src="images/white-cart.png" alt="Cart"><span id="cart-count">0</span></a>
         </div>
     </div>
     <nav>
         <div class="logo">Music Store</div>
         <ul>
-            <li><a href="index.html">Назад в каталог</a></li>
-            <li><span id="user-status">Гость</span></li>
+            <li>
+                <a href="/index.html" class="nav-link">
+                    <span class="nav-icon">←</span> Назад в каталог
+                </a>
+            </li>
+            <li>
+                <a href="/profile.html" class="nav-link">
+                    Личный кабинет
+                </a>
+            </li>
+            <li>
+                <a href="/logout" class="nav-link">
+                    Выйти
+                </a>
+            </li>
+            <!-- Скрытые элементы для совместимости с checkAuthStatus -->
+            <li style="display: none;">
+                <span id="user-status"></span>
+                <a href="/profile.html" id="profile-link"></a>
+                <a href="/login.html" id="login-link"></a>
+                <a href="/logout" id="logout-link"></a>
+            </li>
         </ul>
     </nav>
 </header>
 
 <section class="cart">
-    <h1>Корзина <span id="cart-items-count">0</span></h1>
-    <div id="cart-items">
-        <!-- Товары в корзине будут добавлены через JavaScript -->
-    </div>
-    <div class="cart-total">
-        <p>Итого: <span id="cart-total">0 руб.</span></p>
-        <button id="checkout-button">Оформить заказ</button>
+    <div class="cart-container">
+        <h1>Корзина <span id="cart-items-count">0</span></h1>
+        <div id="cart-items">
+            <!-- Товары в корзине будут добавлены через JavaScript -->
+        </div>
+        <div class="cart-total">
+            <p>Итого: <span id="cart-total">0 руб.</span></p>
+            <button id="checkout-button">Оформить заказ</button>
+        </div>
     </div>
 </section>
 
 <footer>
-    <!-- Аналогично index.html -->
+    <div class="footer-content">
+        <div class="footer-contacts">
+            <h3>Контакты</h3>
+            <p>Телефон:  +7 (800) 333-99-99</p>
+            <p><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="7f161119103f120a0c161c0c0b100d1a510d0a">Email:  info@musicstore.ru</a></p>
+        </div>
+        <div class="footer-copyright">
+            <p>© Магазин персонального аудио «Music Store», 2020-2025</p>
+        </div>
+    </div>
 </footer>
 
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script>
 <script src="js/script.js"></script>
 <script>
-    window.onload = () => {
-        checkAuthStatus(); // Добавляем вызов checkAuthStatus
+    // Загрузка товаров в корзине
+    async function loadCart() {
+        try {
+            console.log('Fetching cart from /api/cart...');
+            const response = await fetch('http://localhost:8080/api/cart', {
+                credentials: 'include',
+            });
+            console.log('Cart response status:', response.status);
+            if (response.ok) {
+                const cart = await response.json();
+                console.log('Cart data:', cart);
+                const cartItems = document.getElementById('cart-items');
+                const cartItemsCount = document.getElementById('cart-items-count');
+                const cartTotal = document.getElementById('cart-total');
+                const cartCount = document.getElementById('cart-count');
 
-    };
+                cartItems.innerHTML = '';
 
-    // Добавляем обработчик события для кнопки
+                if (cart.items.length === 0) {
+                    cartItems.innerHTML = '<p>Ваша корзина пуста.</p>';
+                    cartItemsCount.textContent = '0';
+                    cartTotal.textContent = '0 руб.';
+                    cartCount.textContent = '0';
+                    return;
+                }
+
+                let total = 0;
+                cart.items.forEach(item => {
+                    const cartItem = document.createElement('div');
+                    cartItem.classList.add('cart-item');
+                    cartItem.innerHTML = `
+                        <img src="${item.product.image}" alt="${item.product.name}" class="cart-item-image">
+                        <div class="cart-item-details">
+                            <p><strong>${item.product.name}</strong></p>
+                            <p>Цена: ${item.product.price} руб.</p>
+                            <p>Количество: ${item.quantity}</p>
+                            <p>Сумма: ${item.product.price * item.quantity} руб.</p>
+                        </div>
+                    `;
+                    cartItems.appendChild(cartItem);
+                    total += item.product.price * item.quantity;
+                });
+
+                cartItemsCount.textContent = cart.items.length;
+                cartTotal.textContent = `${total} руб.`;
+                cartCount.textContent = cart.items.length;
+            } else {
+                console.log('Failed to load cart, status:', response.status);
+                document.getElementById('cart-items').innerHTML = '<p>Ошибка при загрузке корзины.</p>';
+            }
+        } catch (error) {
+            console.error('Error loading cart:', error);
+            document.getElementById('cart-items').innerHTML = '<p>Ошибка при загрузке корзины.</p>';
+        }
+    }
+
+    // Обработка оформления заказа
     document.getElementById('checkout-button').addEventListener('click', async () => {
         await checkout();
     });
+
+    // Загружаем данные при загрузке страницы
+    window.onload = () => {
+        checkAuthStatus();
+        loadCart();
+    };
 </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'932eb9aeea561d6c',t:'MTc0NTA5MDA3MC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script>
 </body>
 </html>

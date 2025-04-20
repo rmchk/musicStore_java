@@ -17,47 +17,38 @@
       box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     }
     .top-bar {
-      background-color: #ffffff;
+      background-color: #333;
       color: white;
       padding: 10px 20px;
       display: flex;
       justify-content: space-between;
       font-size: 14px;
     }
-    nav {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 15px 20px;
-    }
-    .logo {
-      font-size: 24px;
-      font-weight: bold;
-      color: #ffffff;
-    }
-    nav ul {
-      list-style: none;
-      margin: 0;
-      padding: 0;
-      display: flex;
-      gap: 20px;
-    }
-    nav ul li {
-      display: inline;
-    }
-    nav ul li a {
-      text-decoration: none;
-      color: #333;
-      font-weight: 500;
-    }
-    nav ul li a:hover {
-      color: #ffffff;
-    }
     .author-section {
       display: flex;
       min-height: calc(100vh - 200px); /* Учитываем высоту header и footer */
       align-items: stretch;
     }
+
+    nav ul {
+      display: flex;
+      list-style: none;
+    }
+
+    nav ul li {
+      margin: 0 15px;
+    }
+
+    nav ul li a {
+      color: #333;
+      text-decoration: none;
+      font-size: 14px;
+    }
+
+    nav ul li a:hover {
+      text-decoration: underline;
+    }
+
     .author-photo {
       flex: 1;
       background: url('/images/me.jpg') no-repeat center center;
@@ -149,7 +140,6 @@
       <li><a href="/index.html">Каталог</a></li>
       <li><a href="/cart.html">Корзина</a></li>
       <li><a href="/profile.html">Личный кабинет</a></li>
-      <li><a href="/author.html">Об авторе</a></li>
       <li><a href="/logout">Выйти</a></li>
       <!-- Скрытые элементы для совместимости с checkAuthStatus -->
       <li style="display: none;">
@@ -176,33 +166,21 @@
       Я всегда открыт к новым проектам и коллаборациям.
     </p>
     <div class="contact">
-      <p>Email: <a href="mailto:your.email@example.com">your.email@example.com</a></p>
-      <p>Telegram: @YourTelegram</p>
+      <p>Email: <a href="mailto:music.man@gmail.com">music.man@gmail.com</a></p>
+      <p>Telegram: @RmchkTelegram</p>
     </div>
   </div>
 </section>
 
 <footer>
   <div class="footer-content">
-    <div class="footer-section">
-      <h3>Каталог</h3>
-      <ul>
-        <li><a href="#">Наушники и персонал аудио</a></li>
-        <li><a href="#">Акустика и hi-fi аудио</a></li>
-        <li><a href="#">Микрофоны и про аудио</a></li>
-      </ul>
-    </div>
-    <div class="footer-section">
-      <h3>О компании</h3>
-      <ul>
-        <li><a href="#">Корпоративные подарки</a></li>
-        <li><a href="#">Положение сервиса</a></li>
-      </ul>
-    </div>
-    <div class="footer-section">
+    <div class="footer-contacts">
       <h3>Контакты</h3>
-      <p>+7 (800) 333-09-89</p>
-      <p><a href="mailto:support@musicstore.com">support@musicstore.com</a></p>
+      <p>Телефон:  +7 (800) 333-99-99</p>
+      <p><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="7f161119103f120a0c161c0c0b100d1a510d0a">Email:  info@musicstore.ru</a></p>
+    </div>
+    <div class="footer-copyright">
+      <p>© Магазин персонального аудио «Music Store», 2020-2025</p>
     </div>
   </div>
 </footer>

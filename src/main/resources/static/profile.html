@@ -15,9 +15,21 @@
   <nav>
     <div class="logo">Music Store</div>
     <ul>
-      <li><a href="/index.html">Каталог</a></li>
-      <li><a href="/cart.html">Корзина</a></li>
-      <li><a href="/logout">Выйти</a></li>
+      <li>
+        <a href="/index.html" class="nav-link">
+          <span class="nav-icon">←</span> Назад в каталог
+        </a>
+      </li>
+      <li>
+        <a href="/cart.html" class="nav-link">
+          <img src="/images/cart-icon.png" alt="Cart" class="nav-icon"> Корзина
+        </a>
+      </li>
+      <li>
+        <a href="/logout" class="nav-link">
+          Выйти
+        </a>
+      </li>
       <!-- Добавляем скрытые элементы для совместимости с checkAuthStatus -->
       <li style="display: none;">
         <span id="user-status"></span>
@@ -71,25 +83,13 @@
 
 <footer>
   <div class="footer-content">
-    <div class="footer-section">
-      <h3>Каталог</h3>
-      <ul>
-        <li><a href="#">Наушники и персонал аудио</a></li>
-        <li><a href="#">Акустика и hi-fi аудио</a></li>
-        <li><a href="#">Микрофоны и про аудио</a></li>
-      </ul>
-    </div>
-    <div class="footer-section">
-      <h3>О компании</h3>
-      <ul>
-        <li><a href="#">Корпоративные подарки</a></li>
-        <li><a href="#">Положение сервиса</a></li>
-      </ul>
-    </div>
-    <div class="footer-section">
+    <div class="footer-contacts">
       <h3>Контакты</h3>
-      <p>+7 (800) 333-09-89</p>
-      <p><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="14d3a7b4">[email&#160;protected]</a></p>
+      <p>Телефон:  +7 (800) 333-99-99</p>
+      <p><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="7f161119103f120a0c161c0c0b100d1a510d0a">Email:  info@musicstore.ru</a></p>
+    </div>
+    <div class="footer-copyright">
+      <p>© Магазин персонального аудио «Music Store», 2020-2025</p>
     </div>
   </div>
 </footer>

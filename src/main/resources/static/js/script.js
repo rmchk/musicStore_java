@@ -62,10 +62,14 @@ function displayProducts(products) {
         const productDiv = document.createElement('div');
         productDiv.classList.add('product');
         productDiv.innerHTML = `
-            <img src="${product.image || 'images/placeholder.jpg'}" alt="${product.name}">
-            <h3>${product.name}</h3>
-            <p>${product.price} руб.</p>
-            <button onclick="addToCart(${product.id})">Добавить в корзину</button>
+            <div class="product-image">
+                <img src="${product.image || 'images/placeholder.jpg'}" alt="${product.name}">
+            </div>
+            <div class="product-info">
+                <h3>${product.name}</h3>
+                <p>${product.price} руб.</p>
+                <button onclick="addToCart(${product.id})">Добавить в корзину</button>
+            </div>
         `;
         productGrid.appendChild(productDiv);
     });
@@ -107,7 +111,7 @@ function filterAndSortProducts() {
             filteredProducts.sort((a, b) => a.price - b.price);
             break;
         case 'price-desc':
-            filteredProducts.sort((a, b) => b.price - a.price);
+            filteredProducts.sort((a, b) => b.price - b.price);
             break;
         case 'name-asc':
             filteredProducts.sort((a, b) => a.name.localeCompare(b.name));
@@ -135,8 +139,9 @@ async function addToCart(productId) {
         if (response.ok) {
             console.log('Product added to cart, updating UI...');
             await updateCartCount();
-            if (document.getElementById('cart-items')) {
-                await displayCart();
+            // Если мы на странице корзины, обновляем её через loadCart
+            if (typeof loadCart === 'function') {
+                await loadCart();
             }
             alert('Товар добавлен в корзину!');
         } else {
@@ -190,59 +195,6 @@ async function updateCartCount() {
     console.log('Updated cart count:', totalItems);
 }
 
-// Отображение корзины
-async function displayCart() {
-    const cartItemsElement = document.getElementById('cart-items');
-    const cartItemsCount = document.getElementById('cart-items-count');
-    const cartTotal = document.getElementById('cart-total');
-    if (!cartItemsElement || !cartItemsCount || !cartTotal) {
-        console.log('Cart elements not found:', {
-            cartItemsElement: !!cartItemsElement,
-            cartItemsCount: !!cartItemsCount,
-            cartTotal: !!cartTotal,
-        });
-        return;
-    }
-
-    console.log('Clearing cart items...');
-    cartItemsElement.innerHTML = '';
-
-    const cartItems = await fetchCart();
-    console.log('Displaying cart items:', cartItems);
-
-    if (cartItems.length === 0) {
-        console.log('Cart is empty, displaying empty message...');
-        cartItemsElement.innerHTML = '<p>Корзина пуста.</p>';
-    } else {
-        cartItems.forEach(item => {
-            const cartItem = document.createElement('div');
-            cartItem.classList.add('cart-item');
-            const quantity = Number(item.quantity) || 0;
-            const price = Number(item.product.price) || 0;
-            cartItem.innerHTML = `
-                <span>${item.product.name} (x${quantity})</span>
-                <span>${price * quantity} руб.</span>
-            `;
-            cartItemsElement.appendChild(cartItem);
-        });
-    }
-
-    const totalItems = cartItems.reduce((sum, item) => {
-        const qty = Number(item.quantity) || 0;
-        return sum + qty;
-    }, 0);
-    cartItemsCount.textContent = totalItems;
-    console.log('Updated cart items count:', totalItems);
-
-    const totalPrice = cartItems.reduce((sum, item) => {
-        const qty = Number(item.quantity) || 0;
-        const price = Number(item.product.price) || 0;
-        return sum + (price * qty);
-    }, 0);
-    cartTotal.textContent = `${totalPrice} руб.`;
-    console.log('Updated cart total:', totalPrice);
-}
-
 // Оформление заказа через API
 async function checkout() {
     try {
@@ -257,7 +209,10 @@ async function checkout() {
             console.log('Checkout successful, updating UI...');
             alert('Заказ оформлен!');
             await updateCartCount();
-            await displayCart();
+            // Если мы на странице корзины, обновляем её через loadCart
+            if (typeof loadCart === 'function') {
+                await loadCart();
+            }
         } else {
             console.error('Checkout failed, status:', response.status);
             console.error('Response text:', await response.text());
@@ -325,9 +280,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         await fetchProducts();
         await fetchCategories();
         await fetchBrands();
-    }
-    if (document.getElementById('cart-items')) {
-        await displayCart();
     }
     await updateCartCount();
 
