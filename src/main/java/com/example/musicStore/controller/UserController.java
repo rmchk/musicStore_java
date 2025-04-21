@@ -2,6 +2,7 @@ package com.example.musicStore.controller;
 
 import com.example.musicStore.config.Views;
 import com.example.musicStore.model.User;
+import com.example.musicStore.service.ReCaptchaService;
 import com.example.musicStore.service.UserService;
 import com.fasterxml.jackson.annotation.JsonView;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,34 +19,48 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private ReCaptchaService reCaptchaService;
+
     @PostMapping("/register")
-    public ResponseEntity<?> registerUser(@RequestBody User user) {
+    public ResponseEntity<?> registerUser(@RequestBody UserRegistrationRequest request) {
         try {
+            // Проверка reCAPTCHA
+            if (request.getRecaptchaResponse() == null || !reCaptchaService.verify(request.getRecaptchaResponse())) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                        .body("Ошибка проверки reCAPTCHA");
+            }
+
             // Валидация
-            if (user.getUsername() == null || user.getUsername().trim().isEmpty()) {
+            if (request.getUsername() == null || request.getUsername().trim().isEmpty()) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                         .body("Имя пользователя не может быть пустым");
             }
-            if (user.getEmail() == null || !user.getEmail().matches("^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$")) {
+            if (request.getEmail() == null || !request.getEmail().matches("^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$")) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                         .body("Неверный формат e-mail");
             }
-            if (user.getPassword() == null || user.getPassword().length() < 6) {
+            if (request.getPassword() == null || request.getPassword().length() < 6) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                         .body("Пароль должен быть не менее 6 символов");
             }
 
             // Проверяем, существует ли пользователь с таким username
             try {
-                userService.loadUserByUsername(user.getUsername());
+                userService.loadUserByUsername(request.getUsername());
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                         .body("Пользователь с таким именем уже существует");
             } catch (UsernameNotFoundException e) {
                 // Пользователь не найден, можно регистрировать
             }
 
-            // Устанавливаем роль по умолчанию (USER)
+            // Создаем объект User
+            User user = new User();
+            user.setUsername(request.getUsername());
+            user.setEmail(request.getEmail());
+            user.setPassword(request.getPassword());
             user.setRole("USER");
+
             // Сохраняем пользователя с шифрованием пароля
             User savedUser = userService.saveUserWithPassword(user);
             return ResponseEntity.ok("Пользователь успешно зарегистрирован: " + savedUser.getUsername());
@@ -134,6 +149,45 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Ошибка при смене email: " + e.getMessage());
         }
+    }
+}
+
+class UserRegistrationRequest {
+    private String username;
+    private String email;
+    private String password;
+    private String recaptchaResponse;
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getRecaptchaResponse() {
+        return recaptchaResponse;
+    }
+
+    public void setRecaptchaResponse(String recaptchaResponse) {
+        this.recaptchaResponse = recaptchaResponse;
     }
 }
 

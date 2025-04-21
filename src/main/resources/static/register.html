@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Регистрация</title>
     <link rel="stylesheet" href="/css/styles.css">
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 </head>
 <body>
 <header>
@@ -14,10 +15,7 @@
     </div>
     <nav>
         <div class="logo">Music Store</div>
-        <ul>
-<!--            <li><a href="/index.html">Назад в каталог</a></li>-->
-<!--            <li><a href="/login.html">Войти</a></li>-->
-        </ul>
+        <ul></ul>
     </nav>
 </header>
 
@@ -31,6 +29,7 @@
             <input type="email" name="email" placeholder="Введите логин или e-mail" required>
             <label>Пароль*</label>
             <input type="password" name="password" placeholder="Введите пароль" required>
+            <div class="g-recaptcha" data-sitekey="6Lf3hx8rAAAAABqoc59olOHeenAwwUQNHTXeOaCs"></div>
             <button type="submit">Зарегистрироваться</button>
         </form>
         <p id="error-message" style="color: red; display: none;"></p>
@@ -43,8 +42,8 @@
     <div class="footer-content">
         <div class="footer-contacts">
             <h3>Контакты</h3>
-            <p>Телефон:  +7 (800) 333-99-99</p>
-            <p><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="7f161119103f120a0c161c0c0b100d1a510d0a">Email:  info@musicstore.ru</a></p>
+            <p>Телефон: +7 (800) 333-99-99</p>
+            <p><a href="/cdn-cgi/l/email-protection">Email: [email protected]</a></p>
         </div>
         <div class="footer-copyright">
             <p>© Магазин персонального аудио «Music Store», 2020-2025</p>
@@ -56,11 +55,19 @@
     document.getElementById('register-form').addEventListener('submit', async (event) => {
         event.preventDefault();
 
+        const recaptchaResponse = grecaptcha.getResponse();
+        if (!recaptchaResponse) {
+            document.getElementById('error-message').textContent = 'Пожалуйста, подтвердите, что вы не робот';
+            document.getElementById('error-message').style.display = 'block';
+            return;
+        }
+
         const formData = new FormData(event.target);
         const userData = {
             username: formData.get('username'),
             email: formData.get('email'),
-            password: formData.get('password')
+            password: formData.get('password'),
+            recaptchaResponse: recaptchaResponse
         };
 
         try {
@@ -78,7 +85,6 @@
                 document.getElementById('success-message').textContent = result;
                 document.getElementById('success-message').style.display = 'block';
                 document.getElementById('error-message').style.display = 'none';
-                // Перенаправляем на страницу логина через 2 секунды
                 setTimeout(() => {
                     window.location.href = '/login.html';
                 }, 2000);

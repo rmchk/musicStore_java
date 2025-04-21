@@ -1,5 +1,6 @@
 package com.example.musicStore.config;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -9,14 +10,19 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
 
+    @Autowired
+    private ReCaptchaLoginFilter reCaptchaLoginFilter;
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
+                .addFilterBefore(reCaptchaLoginFilter, UsernamePasswordAuthenticationFilter.class)
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/", "/index.html", "/cart.html", "/login.html", "/register.html", "/verify-registration.html", "/css/**", "/js/**", "/images/**", "/api/public/**", "/api/users/register", "/api/users/verify-registration").permitAll()
                         .requestMatchers("/profile.html", "/api/users/me", "/api/users/change-password", "/api/cart/**").authenticated()

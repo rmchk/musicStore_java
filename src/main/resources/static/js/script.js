@@ -230,13 +230,15 @@ async function checkAuthStatus() {
     const loginLink = document.getElementById('login-link');
     const logoutLink = document.getElementById('logout-link');
     const profileLink = document.getElementById('profile-link');
+    const adminButton = document.getElementById('admin-button');
 
-    if (!userStatus || !loginLink || !logoutLink || !profileLink) {
+    if (!userStatus || !loginLink || !logoutLink || !profileLink || !adminButton) {
         console.log('Some navigation elements not found:', {
             userStatus: !!userStatus,
             loginLink: !!loginLink,
             logoutLink: !!logoutLink,
             profileLink: !!profileLink,
+            adminButton: !!adminButton,
         });
     }
 
@@ -246,7 +248,6 @@ async function checkAuthStatus() {
             credentials: 'include',
         });
         console.log('Auth status response:', response.status);
-        console.log('Auth status response headers:', response.headers.get('Set-Cookie'));
 
         if (response.ok) {
             console.log('User is authenticated');
@@ -256,6 +257,12 @@ async function checkAuthStatus() {
             if (loginLink) loginLink.style.display = 'none';
             if (logoutLink) logoutLink.style.display = 'inline';
             if (profileLink) profileLink.style.display = 'inline';
+            // Показываем кнопку админ-панели только для роли ADMIN
+            if (adminButton && user.role === 'ADMIN') {
+                adminButton.style.display = 'inline';
+            } else if (adminButton) {
+                adminButton.style.display = 'none';
+            }
         } else {
             console.log('User is not authenticated, status:', response.status);
             console.log('Response text:', await response.text());
@@ -263,6 +270,7 @@ async function checkAuthStatus() {
             if (loginLink) loginLink.style.display = 'inline';
             if (logoutLink) logoutLink.style.display = 'none';
             if (profileLink) profileLink.style.display = 'none';
+            if (adminButton) adminButton.style.display = 'none';
         }
     } catch (error) {
         console.error('Error checking auth status:', error);
@@ -270,6 +278,7 @@ async function checkAuthStatus() {
         if (loginLink) loginLink.style.display = 'inline';
         if (logoutLink) logoutLink.style.display = 'none';
         if (profileLink) profileLink.style.display = 'none';
+        if (adminButton) adminButton.style.display = 'none';
     }
 }
 
